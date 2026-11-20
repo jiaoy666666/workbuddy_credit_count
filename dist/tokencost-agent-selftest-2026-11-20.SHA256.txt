@@ -1,1 +1,1 @@
-dc0fc15581cad334fd3997cf4af2b3035d8f2cc007353ab4c572a9493385e860  tokencost-agent-selftest-2026-11-20.zip
+635739884811addfe00adce41910213b6139ef9ba7ededdae6775346a9064312  tokencost-agent-selftest-2026-11-20.zip

@@ -2,6 +2,56 @@
 
 目标不是模拟其他平台，而是让**当前会话里的 agent** 完成一次固定测试，读取本地真实调用记录，再与模型厂商官方刊例价和 WorkBuddy 官方积分价格比较。结果是固定负载下的“加量包补充成本比”，不是 WorkBuddy 的实际采购价、厂商结算价或官方折扣承诺。
 
+## 运行方式
+
+### 环境准备
+
+- Python 3.10 或更高版本。
+- Bash 用户直接使用 `bash ./tokencost`；Windows CMD/PowerShell 可使用 `tokencost.cmd`。
+- 当前自动适配 WorkBuddy 桌面版和 CLI。其他客户端需要对应会话适配器，不支持时会明确停止。
+- 不需要配置模型 API Key。模型由用户在客户端中选择，官方取价只访问工具白名单中的厂商页面。
+
+### 在客户端中直接自测
+
+1. 解压分发包，让客户端的工作目录位于解压后的工具根目录。
+2. 在客户端选择要测试的模型，建议使用新会话。
+3. 粘贴下面这句话：
+
+```text
+请在当前目录严格按照 AGENTS.md 执行一次受控自测，从 bash ./tokencost start 开始，依次完成固定题目读取、finish 和 report，不要读取其他文件或执行非流程操作，最后原样展示 token、官方预估价、credit 和折扣结果，credit 缺失时不得按 0 计算。
+```
+
+agent 会依次执行 `start → Read 固定题目 → finish → report`，报告保存在 `data/runs/<run_id>/report.json`，最近结果保存在 `data/latest-report.json`。
+
+### 与 WorkBuddy 完整请求显示值对账
+
+`report` 只统计 Read+finish 两次受控调用。若要与 WorkBuddy 页面显示的完整请求消耗比较，必须在下一轮用户消息粘贴：
+
+```text
+请在当前目录执行 bash ./tokencost settle，核对同一 conversationRequestId 的完整 token 与 credit 消耗，并展示 settled-report 的结果；若账本不一致或未结算，原样报告错误并停止。
+```
+
+结果写入 `data/runs/<run_id>/settled-report.json`。settle 会包含本轮最终回答并核对本地账本，不包含 settle 自身的新请求。
+
+### 手动运行
+
+在工具根目录可按同样顺序执行：
+
+```bash
+bash ./tokencost start
+# 按 start 提示完整读取固定题目
+bash ./tokencost finish --answer '<合格率>|<主检人>'
+bash ./tokencost report
+# 下一轮用户请求中再执行
+bash ./tokencost settle
+```
+
+Windows CMD/PowerShell 可将 `bash ./tokencost` 换成 `tokencost.cmd`。不得通过重复 finish、删除状态或合并其他会话来挑选结果。
+
+### 隐私与本地数据
+
+分发包不包含本机路径、账号信息、历史会话或测试结果。运行后产生的测量状态和报告仅保存在当前工具的 `data/` 目录；该目录、客户端记忆目录和 Python 缓存均不进入分发包。
+
 ## 唯一命令流程
 
 给 agent 的完整约束在 `AGENTS.md`。标准执行顺序：
