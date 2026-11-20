@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+if command -v python3 >/dev/null 2>&1; then
+    exec python3 "$ROOT/tokencost.py" "$@"
+elif command -v python >/dev/null 2>&1; then
+    exec python "$ROOT/tokencost.py" "$@"
+elif command -v py >/dev/null 2>&1; then
+    exec py -3 "$ROOT/tokencost.py" "$@"
+else
+    printf '%s\n' 'Python 3 is required but no python3, python, or py launcher was found.' >&2
+    exit 127
+fi

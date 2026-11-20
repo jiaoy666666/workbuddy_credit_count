@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "input_file": "cases/selftest/S1min.txt",
+  "sha256": "918357ea456d2659810d1d32b57b843c88acd320c3dd4b1a945e7e3c3d7d4c97",
+  "local_input_tokens_o200k": 15209,
+  "expected_contains": ["99.42", "郑文博"],
+  "expected_format": "<合格率>|<主检人>",
+  "scope": "仅用于当前 agent 自测；token 控制方式是固定文件哈希、单一 Read、单一 finish，不承诺不同 tokenizer 的绝对 token 数"
+}
